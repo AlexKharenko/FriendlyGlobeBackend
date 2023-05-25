@@ -34,6 +34,6 @@ async function bootstrap() {
   await app.register(cookie);
   await app.register(fastifyMultipart);
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(process.env.PORT, process.env.IS_LOCALHOST ? '' : '0.0.0.0');
 }
 bootstrap();
