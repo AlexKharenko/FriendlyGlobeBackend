@@ -1,0 +1,11 @@
+{
+    "buildCommand": "npm run build",
+    "publish": {
+      "root": "dist",
+      "include": [
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    "runCommand": "npm run start:prod"
+  }
