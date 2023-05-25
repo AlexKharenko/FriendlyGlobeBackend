@@ -1,0 +1,61 @@
+export const AdminUserSelect = {
+  userId: true,
+  firstName: true,
+  secondName: true,
+  username: true,
+  email: true,
+  sexId: true,
+  birthdayDate: true,
+  createdAt: true,
+  profilePhotoURL: true,
+  role: true,
+  blocked: true,
+  verified: true,
+  hidden: true,
+  country: true,
+  userDetails: true,
+  languages: true,
+  hobbies: true,
+};
+
+export const AdminAllUsersSelect = {
+  userId: true,
+  username: true,
+  email: true,
+  role: true,
+  createdAt: true,
+  blocked: true,
+  verified: true,
+  hidden: true,
+  blockedUserMessage: { select: { blockMessage: true } },
+};
+
+export const UserSelect = {
+  userId: true,
+  firstName: true,
+  secondName: true,
+  username: true,
+  sexId: true,
+  birthdayDate: true,
+  createdAt: true,
+  profilePhotoURL: true,
+  country: true,
+  userDetails: true,
+  languages: true,
+  hobbies: true,
+  hidden: true,
+  blocked: true,
+  verified: true,
+};
+
+export const AllUsersSelect = {
+  userId: true,
+  firstName: true,
+  secondName: true,
+  username: true,
+  sexId: true,
+  birthdayDate: true,
+  profilePhotoURL: true,
+  country: true,
+  userDetails: true,
+};

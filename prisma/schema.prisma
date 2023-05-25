@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Sex {
+  NK
+  M
+  F
+  NA
+}
+
+model RefreshToken {
+  userId       Int      @unique
+  refreshToken String   @unique
+  dateExpired  DateTime @default(dbgenerated("NOW() + interval '30 day'"))
+  user         User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model BlockedUserMessage {
+  userId Int @unique
+  blockMessage String?
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model User {
+  userId          Int           @id @default(autoincrement())
+  firstName       String
+  secondName      String
+  username        String        @unique
+  email           String        @unique
+  password        String
+  profilePhotoURL String?
+  sexId           Sex           @default(NK)
+  birthdayDate    DateTime
+  countryId       Int
+  createdAt       DateTime      @default(now())
+  role            Role          @default(USER)
+  blocked         Boolean       @default(false)
+  verified        Boolean       @default(false)
+  hidden          Boolean       @default(false)
+  userDetails     UserDetails?
+  refreshToken    RefreshToken?
+  blockedUserMessage BlockedUserMessage?
+  country         Country       @relation(fields: [countryId], references: [countryId])
+  hobbies         Hobby[] 
+  languages       Language[]
+  blockedByUsers  BlackList[]       @relation("blockedByUser")
+  blocksUsers     BlackList[]       @relation("blocksUser")
+  chatsAsUser1    Chat[]           @relation("User1")
+  chatsAsUser2    Chat[]           @relation("User2")
+  sentMessages    Message[]        @relation("Sender")
+  receivedMessages Message[]      @relation("Receiver")
+}
+
+model Chat {
+  chatId         Int      @id @default(autoincrement())
+  user1      User     @relation("User1", fields: [user1Id], references: [userId])
+  user1Id    Int
+  user2      User     @relation("User2", fields: [user2Id], references: [userId])
+  user2Id    Int
+  createdAt  DateTime @default(now())
+  messages   Message[] @relation("chatMessages")
+
+  @@unique([user1Id, user2Id])
+}
+
+model Message {
+  messageId String @id @default(uuid())
+  chatId Int
+  senderId Int
+  receiverId Int
+  content String
+  timeCreated DateTime @default(now())
+  edited Boolean @default(false)
+  timeEdited DateTime? 
+  read Boolean @default(false)
+  chat       Chat      @relation("chatMessages", fields: [chatId], references: [chatId], onDelete: Cascade)
+  sender      User     @relation("Sender", fields: [senderId], references: [userId])
+  receiver    User     @relation("Receiver", fields: [receiverId], references: [userId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([timeCreated])
+}
+
+model BlackList {
+  blockedUserId Int
+  blockedByUserId Int
+  createdAt DateTime @default(now())
+  blockedUser    User    @relation("blocksUser", fields: [blockedUserId], references: [userId], onDelete: Cascade)
+  blockedByUser  User    @relation("blockedByUser", fields: [blockedByUserId], references: [userId], onDelete: Cascade)
+  @@id([blockedUserId, blockedByUserId])
+}
+
+model UserDetails {
+  userId         Int     @unique
+  bio            String
+  lookingForText String?
+  user           User    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Country {
+  countryId   Int    @id @default(autoincrement())
+  countryName String @unique
+  countryCode String @unique
+  user        User[]
+}
+
+model Hobby {
+  hobbyId Int    @id @default(autoincrement())
+  hobby   String @unique
+  users   User[]
+}
+
+model Language {
+  languageId Int    @id @default(autoincrement())
+  language   String @unique
+  users      User[]
+}
