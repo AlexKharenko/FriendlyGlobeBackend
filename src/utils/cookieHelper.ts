@@ -6,13 +6,13 @@ export const setAuthCookie = (res, refreshToken, accessToken) => {
     .setCookie('refreshToken', refreshToken, {
       maxAge: REFRESH_TOKEN_COOKIE_ALIVE_MS,
       httpOnly: true,
-      // secure: true,
+      secure: true,
       path: '/',
     })
     .setCookie('accessToken', accessToken, {
       maxAge: ACCESS_TOKEN_COOKIE_ALIVE_MS,
       httpOnly: true,
-      // secure: true,
+      secure: true,
       path: '/',
     });
 };
