@@ -22,6 +22,7 @@ async function bootstrap() {
       'http://192.168.1.6:8080',
       'http://192.168.43.126:8080',
       'http://192.168.1.56:8080',
+      process.env.FRONT_END_URL,
     ],
     credentials: true,
   });
