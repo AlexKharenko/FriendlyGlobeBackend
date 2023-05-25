@@ -7,5 +7,5 @@
         "package-lock.json"
       ]
     },
-    "runCommand": "npm run start:prod"
+    "runCommand": "npx prisma migrate deploy && npm run start:prod"
   }
