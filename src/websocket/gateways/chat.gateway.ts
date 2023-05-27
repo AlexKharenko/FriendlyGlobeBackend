@@ -48,7 +48,7 @@ export class ChatGateway {
     return true;
   }
 
-  async handleConnection(client: WebSocket, req: any) {
+  async handleConnection(client: WebSocket, req) {
     const cookieHeader = req.headers.cookie;
     const cookies = cookieParse(cookieHeader);
     const result = await this.validateClient(client, cookies);
@@ -96,7 +96,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('removeChatForUser')
-  async handleBlackListUser(client: any, payload: any) {
+  async handleBlackListUser(client: WebSocket, payload) {
     if (payload.userId)
       this.websocketUtils.sendResponseToUser(
         this.server,
@@ -108,7 +108,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('userCreatedChat')
-  async handleUserCreatedChat(client: any, payload: any) {
+  async handleUserCreatedChat(client: WebSocket, payload) {
     if (payload.chat) {
       const secondUserId = this.websocketUtils.getSecondUserIdOfChat(
         client['user'].userId,
@@ -125,7 +125,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('getOnlineUsers')
-  async handleGetOnlineUsers(client: any, payload: any) {
+  async handleGetOnlineUsers(client: WebSocket) {
     const chatsUserIds = await this.websocketUtils.getChatsUsersIds(
       client['user'].userId,
     );
@@ -138,7 +138,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('readMessagesInChat')
-  async handleReadMessagesInChat(client: any, payload: any) {
+  async handleReadMessagesInChat(client: WebSocket, payload) {
     try {
       const { chatId, secondUserId } =
         await this.websocketUtils.readMessagesInChat(
@@ -172,7 +172,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('getMessages')
-  async handleGetMessages(client: any, payload: any) {
+  async handleGetMessages(client: WebSocket, payload) {
     const messages = await this.websocketUtils.handleGetMessages(
       client['user'].userId,
       payload,
@@ -186,7 +186,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('sendMessage')
-  async handleSendMessage(client: any, payload: any) {
+  async handleSendMessage(client: WebSocket, payload) {
     try {
       const newMessage = await this.websocketUtils.handleCreateMessage(
         client['user'].userId,
@@ -225,7 +225,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('editMessage')
-  async handleEditMessage(client: any, payload: any) {
+  async handleEditMessage(client: WebSocket, payload) {
     try {
       const updatedMessage = await this.websocketUtils.handleEditMessage(
         client['user'].userId,
@@ -276,7 +276,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('deleteMessage')
-  async handleDeleteMessage(client: any, payload: any) {
+  async handleDeleteMessage(client: WebSocket, payload) {
     try {
       const deletedMessage = await this.websocketUtils.handleDeleteMessage(
         client['user'].userId,
@@ -332,7 +332,7 @@ export class ChatGateway {
 
   // Calling logic
   @SubscribeMessage('callEnter')
-  async handleCallEnter(client: any, payload: any) {
+  async handleCallEnter(client: WebSocket, payload) {
     const chat = await this.websocketUtils.getChatByChatId(
       +client['user'].userId,
       payload,
@@ -361,7 +361,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('answerCall')
-  async handleAnswerCall(client: any, payload: any) {
+  async handleAnswerCall(client: WebSocket, payload) {
     const chatIds = await this.websocketUtils.getUserChatIds(
       +client['user'].userId,
     );
@@ -376,7 +376,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('rejectCall')
-  async handleRejectCall(client: any, payload: any) {
+  async handleRejectCall(client: WebSocket, payload) {
     const chat = await this.websocketUtils.getChatByChatId(
       +client['user'].userId,
       payload,
@@ -393,7 +393,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('endCall')
-  async handleEndCall(client: any, payload: any) {
+  async handleEndCall(client: WebSocket, payload) {
     const chat = await this.websocketUtils.getChatByChatId(
       +client['user'].userId,
       payload,
@@ -407,7 +407,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('callOffer')
-  async handleCallOffer(client, payload) {
+  async handleCallOffer(client: WebSocket, payload) {
     const chat = await this.websocketUtils.getChatByChatId(
       +client['user'].userId,
       payload,
@@ -428,7 +428,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('callAnswer')
-  async handleAnswerOffer(client, payload) {
+  async handleAnswerOffer(client: WebSocket, payload) {
     const chat = await this.websocketUtils.getChatByChatId(
       +client['user'].userId,
       payload,
@@ -449,7 +449,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('iceCandidate')
-  async handleIceCandidate(client, payload) {
+  async handleIceCandidate(client: WebSocket, payload) {
     const chat = await this.websocketUtils.getChatByChatId(
       +client['user'].userId,
       payload,
@@ -467,22 +467,4 @@ export class ChatGateway {
       payload.candidate,
     );
   }
-
-  // @SubscribeMessage('endCall')
-  // async handleEndCall(client: any, payload: any) {
-  //   const chat = await this.websocketUtils.getChatByChatId(
-  //     client['userId'].userId,
-  //     payload,
-  //   );
-  //   if (!chat) return;
-  //   const secondUserId = this.websocketUtils.getSecondUserIdOfChat(
-  //     client['user'].userId,
-  //     chat,
-  //   );
-  //   const secondClient = this.websocketUtils.findClientByUserId(
-  //     this.server,
-  //     secondUserId,
-  //   );
-  //   this.websocketUtils.sendResponseToClient(secondClient, 'userRejected', {});
-  // }
 }

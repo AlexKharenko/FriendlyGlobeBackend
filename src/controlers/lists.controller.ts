@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  UseGuards,
-  Param,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ListsService } from 'src/services/lists.service';
 
 @Controller('lists')
