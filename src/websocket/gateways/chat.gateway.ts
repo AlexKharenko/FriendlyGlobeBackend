@@ -5,7 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { TokenService } from 'src/services/token.service';
 import { cookieParse } from 'src/utils/cookieParser';
-import { Server } from 'ws';
+import { Server, WebSocket } from 'ws';
 import { WebsocketUtils } from 'src/utils/websocket.util';
 
 @WebSocketGateway({
