@@ -46,6 +46,13 @@ export class WebsocketUtils {
     }
   }
 
+  async getUnreadMessagesCountOfUser(client) {
+    const count = await this.messageService.getCountOfUnreadMessages(
+      +client['user'].userId,
+    );
+    this.sendResponseToClient(client, 'unreadMessagesCount', { count });
+  }
+
   async getUserChatIds(userId) {
     const chats = await this.chatService.getChats(+userId);
     return chats.map((chat) => chat.chatId);

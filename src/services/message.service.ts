@@ -28,6 +28,17 @@ export class MessageService {
     return messages;
   }
 
+  async getCountOfUnreadMessages(userId) {
+    const unreadCount = await this.prismaService.message.count({
+      where: {
+        receiverId: userId,
+        read: false,
+      },
+    });
+
+    return unreadCount;
+  }
+
   async getMessageById(messageId: string) {
     const message = await this.prismaService.message.findFirst({
       where: { messageId },

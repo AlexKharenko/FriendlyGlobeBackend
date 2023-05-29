@@ -64,6 +64,7 @@ export class ChatGateway {
       'userWentOnline',
       { userId: client['user'].userId },
     );
+    await this.websocketUtils.getUnreadMessagesCountOfUser(client);
   }
 
   async handleDisconnect(client: WebSocket) {
