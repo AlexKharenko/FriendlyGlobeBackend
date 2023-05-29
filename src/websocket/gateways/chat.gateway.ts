@@ -53,9 +53,6 @@ export class ChatGateway {
     const cookies = cookieParse(cookieHeader);
     const result = await this.validateClient(client, cookies);
     if (!result) return;
-    console.log(`Client ${client['user'].userId} connected`);
-
-    console.log([...this.server.clients].map((c) => c['user'].userId));
 
     const chatsUserIds = await this.websocketUtils.getChatsUsersIds(
       client['user'].userId,
@@ -87,9 +84,8 @@ export class ChatGateway {
           client,
           this.callsMap,
         );
-        return console.log(`Client ${client['user'].userId} disconnected`);
+        return;
       }
-      console.log(`Client unknown disconnected`);
     } catch (err) {
       console.log(err);
     }
@@ -404,6 +400,18 @@ export class ChatGateway {
     if (!call)
       return this.websocketUtils.sendResponseToClient(client, 'forbidden', {});
     this.websocketUtils.callEndHandle(this.server, client, this.callsMap, chat);
+  }
+
+  @SubscribeMessage('toggleVideo')
+  async handleToggleVideo(client: WebSocket, payload) {
+    const chat = await this.websocketUtils.getChatByChatId(
+      +client['user'].userId,
+      payload,
+    );
+    if (!chat) return;
+    const call = this.callsMap.get(chat.chatId);
+    if (!call) return;
+    this.websocketUtils.toggleVideoHandle(this.server, client, payload, call);
   }
 
   @SubscribeMessage('callOffer')

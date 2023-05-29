@@ -160,8 +160,8 @@ export class WebsocketUtils {
   // calls
   getSecondUserOfCall(userId, call) {
     return call.recipient.userId == userId
-      ? call.recipient.userId
-      : call.initiator.userId;
+      ? call.initiator.userId
+      : call.recipient.userId;
   }
 
   callNotExistHandle(server, client, callsMap, chat) {
@@ -219,10 +219,20 @@ export class WebsocketUtils {
     });
   }
 
+  toggleVideoHandle(server, client, payload, call) {
+    const secondUserOfCall = this.getSecondUserOfCall(
+      client['user'].userId,
+      call,
+    );
+    const secondCallClient = this.findClientByUserId(server, secondUserOfCall);
+    this.sendResponseToClient(secondCallClient, 'remoteVideoToggled', {
+      enabled: payload.enabled || false,
+    });
+  }
+
   async endAllCalls(server, client, callsMap) {
     const chatIds = await this.getUserChatIds(+client['user'].userId);
     const activeCallIds = this.findAllActiveUserCalls(callsMap, chatIds);
-    console.log(activeCallIds);
     if (chatIds.length == 0) return;
     for (const callId of activeCallIds) {
       if (callId) {
@@ -311,12 +321,5 @@ export class WebsocketUtils {
       chatId: chat.chatId,
       candidate,
     });
-  }
-
-  // getOnlineUsers(server: Server);
-  // Define your utility functions here
-  utilityFunction() {
-    // Access the service methods using this.myService
-    console.log('hello');
   }
 }
