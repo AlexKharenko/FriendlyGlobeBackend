@@ -19,6 +19,7 @@ import { UpdateUserDto } from 'src/dtos/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import * as util from 'util';
 import { pipeline } from 'stream';
+import { createFoldersIfNotExist } from 'src/utils/createFoldersIfNotExist';
 const pump = util.promisify(pipeline);
 
 const PAGE_SIZE = 10;
@@ -489,9 +490,9 @@ export class UserService {
     }
     const filename = `${v4()}${extname(profilePhoto.filename)}`;
     const parentDir = dirname(dirname(dirname(__dirname)));
-    const stream = createWriteStream(
-      join(parentDir, 'public', 'uploads', 'images', filename),
-    );
+    const folderPath = join(parentDir, 'public', 'uploads', 'images');
+    await createFoldersIfNotExist(folderPath);
+    const stream = createWriteStream(join(folderPath, filename));
     await pump(profilePhoto.file, stream);
     await this.prismaService.user.update({
       where: { userId },
