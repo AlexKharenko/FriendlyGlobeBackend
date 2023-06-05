@@ -9,7 +9,6 @@ export const setAuthCookie = (res, refreshToken, accessToken) => {
       sameSite: 'none',
       secure: true,
       path: '/',
-      domain: process.env.FRONT_DOMAIN || '',
     })
     .setCookie('accessToken', accessToken, {
       maxAge: ACCESS_TOKEN_COOKIE_ALIVE_MS,
@@ -17,11 +16,22 @@ export const setAuthCookie = (res, refreshToken, accessToken) => {
       sameSite: 'none',
       secure: true,
       path: '/',
-      domain: process.env.FRONT_DOMAIN || '',
     });
 };
 
 export const removeAuthCookie = (res) => {
-  res.setCookie('refreshToken', '', { httpOnly: true, path: '/', maxAge: 0 });
-  res.setCookie('accessToken', '', { httpOnly: true, path: '/', maxAge: 0 });
+  res.setCookie('refreshToken', '', {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    path: '/',
+    maxAge: 0,
+  });
+  res.setCookie('accessToken', '', {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    path: '/',
+    maxAge: 0,
+  });
 };
