@@ -10,10 +10,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
-// import { parseBool } from 'src/utils/parseBool';
-// import { parseArray } from 'src/utils/parseArray';
-// import { AdminGuard } from 'src/guards/admin.guard';
-// import { VerifiedGuard } from 'src/guards/verified.guard';
 import { BlockedGuard } from 'src/guards/blocked.guard';
 import { VerifiedGuard } from 'src/guards/verified.guard';
 import { ChatService } from 'src/services/chat.service';

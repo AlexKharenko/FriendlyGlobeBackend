@@ -9,6 +9,7 @@ export const setAuthCookie = (res, refreshToken, accessToken) => {
       sameSite: 'none',
       secure: true,
       path: '/',
+      domain: process.env.FRONT_DOMAIN || '',
     })
     .setCookie('accessToken', accessToken, {
       maxAge: ACCESS_TOKEN_COOKIE_ALIVE_MS,
@@ -16,6 +17,7 @@ export const setAuthCookie = (res, refreshToken, accessToken) => {
       sameSite: 'none',
       secure: true,
       path: '/',
+      domain: process.env.FRONT_DOMAIN || '',
     });
 };
 
